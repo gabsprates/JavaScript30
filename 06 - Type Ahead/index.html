@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+const endpoint  = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+const input     = document.querySelector('.search-form input');
+const sugges    = document.querySelector('.suggestions');
+
+var cities = [];
+
+fetch(endpoint)
+  .then(data => data.json())
+  .then(json => cities = json);
+
+function findCities(city) {
+  const regex = new RegExp(city, 'gi');
+  return cities.filter(c => {
+    return regex.test(c.city) || regex.test(c.state);
+  });
+}
+
+function numberWithCommas(number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function displayCities(e) {
+  let city    = this.value;
+  const regex = new RegExp(city, 'gi');
+
+  let results = findCities(city);
+  let html    = results.map(x => {
+    let localName = `${x.city}, ${x.state}`;
+    localName  = localName.replace(regex, `<span class='hl'>${this.value}</span>`);
+    return `
+      <li>
+        <span class='name'>${localName}</span>
+        <span class='population'>${numberWithCommas(x.population)}</span>
+      </li>
+    `;
+  });
+  sugges.innerHTML = html.join('');
+}
+
+input.addEventListener('keyup', displayCities);
+
+</script>
+  </body>
+</html>
