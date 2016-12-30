@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+'use strict';
+
+const canvas  = document.querySelector('#draw');
+const ctx     = canvas.getContext('2d');
+
+canvas.width  = window.innerWidth - 4;
+canvas.height = window.innerHeight - 4;
+
+let isDrawing = false,
+    direction = true,
+    limit     = 250,
+    min       = 50,
+    rate      = 5,
+    lastX     = 0,
+    lastY     = 0,
+    hue       = 0;
+
+// could to be `miter`, `round`, `bevel`
+ctx.lineJoin = 'round';
+
+// could to be `butt`, `round`, `square`
+ctx.lineCap = 'round';
+
+ctx.lineWidth   = min;
+ctx.strokeStyle = '#ffc400';
+ctx.globalCompositeOperation = "xor";
+ctx.globalCompositeOperation = "color";
+
+function draw(e) {
+  if (!isDrawing) return;
+
+  console.log(e);
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+  ctx.beginPath();
+
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(e.offsetX, e.offsetY);
+
+  ctx.stroke();
+  ctx.closePath();
+
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+  hue++;
+
+  if (hue >= 360) hue = 0;
+
+  if (ctx.lineWidth > limit || ctx.lineWidth < min) {
+    direction = !direction;
+  }
+
+  if (direction) {
+    ctx.lineWidth += rate;
+  } else {
+    ctx.lineWidth -= rate;
+  }
+}
+
+var falseDrawing = () => isDrawing = false;
+
+canvas.addEventListener('mousemove',  draw);
+canvas.addEventListener('mousedown',  (e) => {
+  isDrawing = true;
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+});
+canvas.addEventListener('mouseup',  falseDrawing);
+canvas.addEventListener('mouseout', falseDrawing);
+
+</script>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  html, body {
+    background-color: #ededed;
+    margin:0;
+    padding: 0;
+  }
+</style>
+
+</body>
+</html>
