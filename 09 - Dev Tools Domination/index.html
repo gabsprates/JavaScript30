@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Regular
+    console.log('hi');
+
+    // Interpolated
+    console.log('hi, I am a %s', 'developer');
+
+    // Styled
+    console.log('%cI am a good dev', 'font-size:50px;background:#f90;color:#fff;');
+
+    // warning!
+    console.warn("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+
+    // Error :|
+    console.error(":(");
+
+    // Info
+    console.info("Darth Vader is the Luke's father");
+
+    // Testing
+    const p = document.querySelector('p');
+    console.assert(p.classList.contains('boo'), "not");
+
+    // clearing
+    console.clear();
+
+    // Viewing DOM Elements
+    console.log(p);
+    console.dir(p);
+    console.clear();
+
+    // Grouping together
+    dogs.forEach(dog => {
+      console.group(`${dog.name}`);
+      console.log(`name: ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age * 7} years old`);
+      console.groupEnd(`${dog.name}`);
+    });
+
+    // counting
+    console.count('dev');
+    console.count('developer');
+    console.count('developer');
+    console.count('dev');
+    console.count('dev');
+
+    // timing
+    // console.time('doing something');
+    // fetch('https://api.github.com/users/gabsprates')
+    //   .then(data => data.json())
+    //   .then(data => {
+    //     console.timeEnd('doing something');
+    //     console.log(data);
+    //   });
+
+    console.clear();
+
+
+    // just kidding
+    const url = "https://api.github.com/users/gabsprates"
+    fetch(url)
+      .then(dataU => dataU.json())
+      .then(dataU => {
+        console.log(`%c${dataU.name}`, 'font-size:16px;font-weight:bold;');
+        console.log(`%c${dataU.blog}`, 'font-style:oblique;');
+        console.log(`@%c${dataU.login}`, 'font-style:oblique;');
+
+        fetch(`${url}/repos`)
+          .then(dataR => dataR.json())
+          .then(dataR => {
+            console.group('repos');
+            dataR.forEach(repo => {
+              let fo  = "font-style:oblique;"
+              console.groupCollapsed(repo.name);
+              console.log(`%c${repo.name}`, `font-size:14px;font-weight:bold;`);
+              console.log(`%c${repo.html_url}`, `${fo}`);
+              console.log(`%c${repo.language}`, `${fo}`);
+              console.log(`> %c${repo.description}`, `${fo}`);
+              console.groupEnd(repo.name);
+            });
+            console.groupEnd('repos');
+          });
+
+      });
+
+
+  </script>
+</body>
+</html>
