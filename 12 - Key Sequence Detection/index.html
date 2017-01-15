@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+  <style media="screen">
+    body {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+<script type="text/javascript">
+'use strict';
+
+var pressed = [];
+const secretCode = {
+  gabs: simpleLoL,
+  wesbos: cornify_add
+};
+
+
+// clear pressed array
+var clearTimer;
+var clearPressed = () => pressed = [];
+
+
+// watch secret code
+window.addEventListener('keyup', function(e) {
+
+  window.clearTimeout(clearTimer);
+
+  pressed.push(e.key);
+  var code = pressed.join('');
+  if (secretCode[code]) {
+    secretCode[code]();
+  }
+  console.log(pressed);
+
+  clearTimer = window.setTimeout(clearPressed, 500);
+
+});
+
+
+// function for secret code 'gabs'
+function simpleLoL() {
+
+  var hue = Math.random() * 360;
+  var h1  = document.querySelector('.lol_title');
+  var marginT = (Math.random() * window.innerHeight);
+  var marginL = (Math.random() * window.innerWidth);
+
+  if (!h1) {
+    h1 = document.createElement('h1');
+    h1.classList.add('lol_title');
+    h1.textContent = 'LoOoOoOoOoL';
+    h1.style.textShadow = '0 0 2px #fff';
+  }
+
+  h1.style.color = `hsl(${hue/2}, 100%, 50%)`;
+  h1.style.margin = `${marginT}px 0 0 ${marginL}px`;
+
+  document.body.appendChild(h1);
+  document.body.style.backgroundColor = `hsl(${hue}, 100%, 50%)`;
+
+}
+</script>
+</body>
+</html>
